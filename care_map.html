@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Care Map</title>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD2cZeq27Irf4i4ef3P-nG3ivL-6FY0QOA&callback=initMap"
+        async defer></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f7fc;
+            color: #333;
+        }
+
+        .navbar {
+            background-color: #ffffff;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            padding: 15px 0;
+            position: sticky;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+        }
+
+        .nav-logo {
+            font-size: 24px;
+            font-weight: bold;
+            color: #2549a1;
+            text-decoration: none;
+        }
+
+        .nav-links {
+            list-style: none;
+            display: flex;
+            gap: 20px;
+            margin: 0;
+            padding: 0;
+        }
+
+        .nav-links a {
+            color: #333;
+            text-decoration: none;
+            font-size: 16px;
+            padding: 8px 16px;
+            border-radius: 5px;
+            transition: all 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            background-color: #f79eb0;
+            color: white;
+        }
+
+        .container {
+            display: flex;
+            height: 100vh;
+        }
+
+        .list {
+            width: 30%;
+            padding: 20px;
+            background-color: #ffffff;
+            overflow-y: auto;
+            border-right: 1px solid #ddd;
+        }
+
+        .list h2 {
+            color: #2549a1;
+            text-align: center;
+        }
+
+        .list-item {
+            margin-bottom: 20px;
+            padding: 15px;
+            background: #f4f7fc;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .list-item h3 {
+            margin: 0;
+            color: #2549a1;
+        }
+
+        .map {
+            flex: 1;
+        }
+
+        #map {
+            width: 100%;
+            height: 100%;
+        }
+
+        /* Responsive Design for Mobile Devices */
+        @media screen and (max-width: 768px) {
+
+            /* Navbar adjustments */
+            .nav-container {
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .nav-links {
+                flex-direction: column;
+                gap: 10px;
+                text-align: center;
+            }
+
+            /* Container adjustments */
+            .container {
+                width: 90%;
+                margin: 20px auto;
+                padding: 20px;
+            }
+
+            /* Buttons and form inputs */
+            button,
+            select {
+                font-size: 14px;
+                padding: 10px;
+            }
+
+            /* Reduce padding for resource bubbles */
+            .resource-bubble {
+                padding: 15px;
+                margin: 10px 0;
+            }
+
+            /* Adjust result and resource sections */
+            .result,
+            .resources {
+                font-size: 14px;
+                padding: 15px;
+            }
+        }
+
+        /* Responsive Design for Very Small Devices */
+        @media screen and (max-width: 480px) {
+            h1 {
+                font-size: 20px;
+            }
+
+            .nav-logo {
+                font-size: 18px;
+            }
+
+            .resource-bubble h4 {
+                font-size: 16px;
+            }
+
+            button,
+            select {
+                font-size: 12px;
+                padding: 8px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="index.html" class="nav-logo">CareConnect</a>
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="mha.html">Mental Health</a></li>
+                <li><a href="veterinary.html">Veterinary</a></li>
+                <li><a href="care_map.html">Care Map</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="list" id="clinicList">
+            <h2>Nearby Clinics and Hospitals</h2>
+            <!-- List of clinics and hospitals will be dynamically added here -->
+        </div>
+        <div class="map">
+            <div id="map"></div>
+        </div>
+    </div>
+
+    <script>
+        // Sample data for clinics and hospitals in the Financial District
+        const healthcareFacilities = [
+            {
+                name: "Downtown Mental Health Center",
+                address: "100 Maiden Lane, New York, NY",
+                specialty: "Psychology",
+                insurance: "Accepted",
+                cost: "$15 per mental health consultation",
+                consultationType: "Telehealth & In-person",
+                lat: 40.705305,
+                lng: -74.008584,
+            },
+            {
+                name: "Seaport Veterinary Clinic",
+                address: "80 South Street, New York, NY",
+                specialty: "Small Animal Care",
+                insurance: "Accepted",
+                cost: "$20 per veterinary consultation",
+                consultationType: "In-person",
+                lat: 40.707710,
+                lng: -74.003634,
+            },
+            {
+                name: "Financial District Primary Care",
+                address: "150 Broadway, New York, NY",
+                specialty: "General Practice",
+                insurance: "Accepted",
+                cost: "$15 per physical health consultation",
+                consultationType: "Telehealth",
+                lat: 40.710010,
+                lng: -74.009161,
+            },
+        ];
+
+        // Initialize the Google Map
+        function initMap() {
+            const mapCenter = { lat: 40.707149, lng: -74.008875 }; // Financial District, Manhattan
+            const map = new google.maps.Map(document.getElementById("map"), {
+                center: mapCenter,
+                zoom: 15,
+            });
+
+            // Add markers to the map and populate the list
+            const clinicListDiv = document.getElementById("clinicList");
+
+            healthcareFacilities.forEach((facility, index) => {
+                // Create marker for each facility
+                const marker = new google.maps.Marker({
+                    position: { lat: facility.lat, lng: facility.lng },
+                    map,
+                    title: facility.name,
+                });
+
+                // Add facility details to the list
+                const listItem = document.createElement("div");
+                listItem.classList.add("list-item");
+                listItem.innerHTML = `
+                <h3>${facility.name}</h3>
+                <p><strong>Address:</strong> ${facility.address}</p>
+                <p><strong>Specialty:</strong> ${facility.specialty}</p>
+                <p><strong>Insurance:</strong> ${facility.insurance}</p>
+                <p><strong>Cost:</strong> ${facility.cost}</p>
+                <p><strong>Consultation Type:</strong> ${facility.consultationType}</p>
+                <button onclick="focusMarker(${index})">View on Map</button>
+            `;
+                clinicListDiv.appendChild(listItem);
+
+                // Add info window for each marker
+                const infoWindow = new google.maps.InfoWindow({
+                    content: `
+                    <div>
+                        <h3>${facility.name}</h3>
+                        <p><strong>Address:</strong> ${facility.address}</p>
+                        <p><strong>Specialty:</strong> ${facility.specialty}</p>
+                        <p><strong>Insurance:</strong> ${facility.insurance}</p>
+                        <p><strong>Cost:</strong> ${facility.cost}</p>
+                        <p><strong>Consultation Type:</strong> ${facility.consultationType}</p>
+                    </div>
+                `,
+                });
+
+                // Add click event for marker
+                marker.addListener("click", () => {
+                    infoWindow.open(map, marker);
+                    map.panTo(marker.getPosition());
+                    map.setZoom(16);
+                });
+            });
+
+            // Function to focus on a marker from the list
+            window.focusMarker = (index) => {
+                const facility = healthcareFacilities[index];
+                map.panTo({ lat: facility.lat, lng: facility.lng });
+                map.setZoom(16);
+            };
+        }
+    </script>
+
+</body>
+
+</html>

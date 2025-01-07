@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Veterinary Support</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f7fc;
+            color: #333;
+        }
+
+        .navbar {
+            background-color: #ffffff;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            padding: 15px 0;
+            position: sticky;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+        }
+
+        .nav-logo {
+            font-size: 24px;
+            font-weight: bold;
+            color: #2549a1;
+            text-decoration: none;
+        }
+
+        .nav-links {
+            list-style: none;
+            display: flex;
+            gap: 20px;
+            margin: 0;
+            padding: 0;
+        }
+
+        .nav-links a {
+            color: #333;
+            text-decoration: none;
+            font-size: 16px;
+            padding: 8px 16px;
+            border-radius: 5px;
+            transition: all 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            background-color: #f79eb0;
+            color: white;
+        }
+
+        .container {
+            max-width: 700px;
+            margin: 50px auto;
+            background: #ffffff;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            text-align: center;
+            color: #f79eb0;
+            margin-bottom: 20px;
+        }
+
+        .question {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 10px;
+        }
+
+        select,
+        button {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+
+        button {
+            background-color: #2549a1;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+            border: none;
+        }
+
+        button:hover {
+            background-color: #1f3e88;
+        }
+
+        .result,
+        .resources {
+            margin-top: 30px;
+            padding: 20px;
+            border-radius: 8px;
+            background-color: #f4f7fc;
+            color: #333;
+            font-weight: bold;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .resources h3 {
+            color: #f79eb0;
+        }
+
+        .resources p {
+            margin: 5px 0;
+        }
+
+        /* Responsive Design for Mobile Devices */
+        @media screen and (max-width: 768px) {
+
+            /* Navbar adjustments */
+            .nav-container {
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .nav-links {
+                flex-direction: column;
+                gap: 10px;
+                text-align: center;
+            }
+
+            /* Container adjustments */
+            .container {
+                width: 90%;
+                margin: 20px auto;
+                padding: 20px;
+            }
+
+            /* Buttons and form inputs */
+            button,
+            select {
+                font-size: 14px;
+                padding: 10px;
+            }
+
+            /* Reduce padding for resource bubbles */
+            .resource-bubble {
+                padding: 15px;
+                margin: 10px 0;
+            }
+
+            /* Adjust result and resource sections */
+            .result,
+            .resources {
+                font-size: 14px;
+                padding: 15px;
+            }
+        }
+
+        /* Responsive Design for Very Small Devices */
+        @media screen and (max-width: 480px) {
+            h1 {
+                font-size: 20px;
+            }
+
+            .nav-logo {
+                font-size: 18px;
+            }
+
+            .resource-bubble h4 {
+                font-size: 16px;
+            }
+
+            button,
+            select {
+                font-size: 12px;
+                padding: 8px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="index.html" class="nav-logo">CareConnect</a>
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="mha.html">Mental Health</a></li>
+                <li><a href="veterinary.html">Veterinary</a></li>
+                <li><a href="care_map.html">Care Map</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="container">
+        <h1>Veterinary Support</h1>
+        <form id="vetForm">
+            <!-- 10 questions for veterinary assessment -->
+            <div class="question">
+                <label>1. Is your pet eating normally?</label>
+                <select id="vetQuestion1">
+                    <option value="1">Yes</option>
+                    <option value="3">No</option>
+                </select>
+            </div>
+            <div class="question">
+                <label>2. Does your pet appear lethargic or inactive?</label>
+                <select id="vetQuestion2">
+                    <option value="1">No</option>
+                    <option value="3">Yes</option>
+                </select>
+            </div>
+            <div class="question">
+                <label>3. Has your pet shown signs of discomfort (e.g., limping, whining)?</label>
+                <select id="vetQuestion3">
+                    <option value="1">No</option>
+                    <option value="3">Yes</option>
+                </select>
+            </div>
+            <div class="question">
+                <label>4. Is your pet drinking water as usual?</label>
+                <select id="vetQuestion4">
+                    <option value="1">Yes</option>
+                    <option value="3">No</option>
+                </select>
+            </div>
+            <div class="question">
+                <label>5. Has your pet experienced recent weight loss or gain?</label>
+                <select id="vetQuestion5">
+                    <option value="1">No</option>
+                    <option value="3">Yes</option>
+                </select>
+            </div>
+            <div class="question">
+                <label>6. Is your pet scratching or licking excessively?</label>
+                <select id="vetQuestion6">
+                    <option value="1">No</option>
+                    <option value="3">Yes</option>
+                </select>
+            </div>
+            <div class="question">
+                <label>7. Does your pet have trouble breathing?</label>
+                <select id="vetQuestion7">
+                    <option value="1">No</option>
+                    <option value="3">Yes</option>
+                </select>
+            </div>
+            <div class="question">
+                <label>8. Is your pet vomiting or experiencing diarrhea?</label>
+                <select id="vetQuestion8">
+                    <option value="1">No</option>
+                    <option value="3">Yes</option>
+                </select>
+            </div>
+            <div class="question">
+                <label>9. Has your pet experienced a change in behavior (e.g., aggression, anxiety)?</label>
+                <select id="vetQuestion9">
+                    <option value="1">No</option>
+                    <option value="3">Yes</option>
+                </select>
+            </div>
+            <div class="question">
+                <label>10. Is your pet having difficulty standing or walking?</label>
+                <select id="vetQuestion10">
+                    <option value="1">No</option>
+                    <option value="3">Yes</option>
+                </select>
+            </div>
+            <button type="button" onclick="evaluatePet()">Submit</button>
+        </form>
+
+        <div class="result" id="vetResult" style="display: none;"></div>
+        <div class="resources" id="vetResources" style="display: none;"></div>
+    </div>
+
+    <script>
+        function evaluatePet() {
+            const scores = Array.from({ length: 10 }, (_, i) =>
+                parseInt(document.getElementById(`vetQuestion${i + 1}`).value)
+            );
+
+            const totalScore = scores.reduce((sum, score) => sum + score, 0);
+            const vetResultDiv = document.getElementById('vetResult');
+            const vetResourcesDiv = document.getElementById('vetResources');
+            vetResultDiv.style.display = "block";
+            vetResourcesDiv.style.display = "block";
+
+            if (totalScore <= 15) {
+                vetResultDiv.innerText = "Your pet appears to be in good health. Continue monitoring their behavior and provide regular care.";
+            } else {
+                vetResultDiv.innerText = "Your pet may need veterinary attention. Consider scheduling a check-up.";
+            }
+
+            // Display local veterinary resources
+            vetResourcesDiv.innerHTML = `
+            <h3>Local Veterinary Resources</h3>
+            <p><strong>Dr. Emily Hart (Small Animal Specialist)</strong><br>Downtown Veterinary Clinic<br>Address: 100 Maiden Lane, New York, NY<br>Insurance: Accepted<br>Cost: $20 per consultation<br>Consultation Type: Telehealth & In-person</p>
+            <p><strong>Dr. James Powell (Exotic Pet Specialist)</strong><br>Seaport Animal Hospital<br>Address: 80 South Street, New York, NY<br>Insurance: Accepted<br>Cost: $20 per consultation<br>Consultation Type: In-person</p>
+            <p><strong>Dr. Rachel Lee (Emergency Care Specialist)</strong><br>Financial District Pet Care<br>Address: 150 Broadway, New York, NY<br>Insurance: Accepted<br>Cost: $20 per consultation<br>Consultation Type: Telehealth</p>
+        `;
+        }
+    </script>
+
+</body>
+
+</html>
